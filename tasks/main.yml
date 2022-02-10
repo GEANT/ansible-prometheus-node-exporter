@@ -44,9 +44,11 @@
   include_tasks: web_config.yml
   when: prometheus_node_exporter_tls_cert is defined or
     prometheus_node_exporter_tls_key is defined or
+    prometheus_node_exporter_tls_self_signed or
     prometheus_node_exporter_tls_client_ca is defined or
-    (prometheus_node_exporter_basic_auth_users is defined and prometheus_node_exporter_basic_auth_users|count > 0) or
-    (prometheus_node_exporter_http_server_config is defined and prometheus_node_exporter_http_server_config|count > 0)
+    prometheus_node_exporter_basic_auth_users is defined or
+    prometheus_node_exporter_http_server_config is defined
+
 
 - name: create systemd service unit
   template:

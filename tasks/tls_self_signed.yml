@@ -1,0 +1,34 @@
+---
+- name: Ensure TLS private key is available
+  community.crypto.openssl_privatekey:
+    path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+    size: "{{ prometheus_node_exporter_tls_self_signed_key_size | default(omit) }}"
+    type: "{{ prometheus_node_exporter_tls_self_signed_key_type | default(omit) }}"
+    curve: "{{ prometheus_node_exporter_tls_self_signed_key_curve | default(omit) }}"
+    regenerate: "{{ prometheus_node_exporter_tls_self_signed_key_regenerate | default(omit) }}"
+    owner: "{{ prometheus_exporters_common_user}}"
+    group: "{{ prometheus_exporters_common_group }}"
+
+- name: Ensure CSR is created from private key
+  # We use the 'pipe' version because we don't want/need to write this to a file
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+    common_name: "{{ prometheus_node_exporter_tls_self_signed_csr_common_name | default(omit) }}"
+  register: gencsr
+  changed_when: false
+
+- name: Ensure TLS certificate is available
+  community.crypto.x509_certificate:
+    path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
+    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+    csr_content: "{{ gencsr.csr }}"
+    # mode: "{{ item.mode }}"
+    owner: "{{ prometheus_exporters_common_user}}"
+    group: "{{ prometheus_exporters_common_group }}"
+    provider: selfsigned
+
+# To ensure these are taken into account when constructing the web.yml file
+- name: set key variables
+  set_fact:
+    prometheus_node_exporter_tls_key: asdfas
+    prometheus_node_exporter_tls_cert: asdfas

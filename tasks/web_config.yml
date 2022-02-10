@@ -7,53 +7,32 @@
       }
      ) }}"
 
-- name: ensure tls_server_config related files are available
+- name: ensure regular TLS cert files are available
   copy:
     dest: "{{ prometheus_exporters_common_conf_dir }}/{{ item.file }}"
     content: "{{ lookup('vars', 'prometheus_node_exporter_tls_' ~ item.name) }}"
     mode: "{{ item.mode }}"
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
-  loop: "{{ tls_files }}"
+  loop: "{{ tls_files | json_query('[?name!=`client_ca`]') }}"
   loop_control:
     label: "{{ prometheus_exporters_common_conf_dir }}/{{ item.file }}"
-  when: lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
+  when:
+    - lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
+    - not prometheus_node_exporter_tls_self_signed
 
+- name: include tasks for self-signed TLS cert
+  include_tasks: tls_self_signed.yml
+  when: prometheus_node_exporter_tls_self_signed
 
-- name: Ensure TLS private key is available
-  community.crypto.openssl_privatekey:
-    path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
-    # FIXME make this configurable
-    type: ECC
-    curve: secp256r1
+- name: Ensure client CA certificate is available
+  copy:
+    content: "{{ prometheus_node_exporter_tls_client_ca }}"
+    dest: "{{ prometheus_exporters_common_conf_dir }}/client_ca.crt"
+    mode: 0640
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
-  when: prometheus_node_exporter_tls_self_signed
-
-- name: Ensure CSR is available
-  community.crypto.openssl_csr_pipe:
-    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
-    # FIXME make this configurable
-    common_name: "{{ ansible_fqdn }} prometheus node exporter"
-  when: prometheus_node_exporter_tls_self_signed
-  register: gencsr
-  changed_when: false
-
-- name: Eensure TLS certificate is available
-  community.crypto.x509_certificate:
-    path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
-    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
-    csr_content: "{{ gencsr.csr }}"
-    # mode: "{{ item.mode }}"
-    owner: "{{ prometheus_exporters_common_user}}"
-    group: "{{ prometheus_exporters_common_group }}"
-    provider: selfsigned
-  when: prometheus_node_exporter_tls_self_signed
-
-
-
-
-
+  when: prometheus_node_exporter_tls_client_ca is defined
 
 - name: construct tls_server_config
   set_fact:
