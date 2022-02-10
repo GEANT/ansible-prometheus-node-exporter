@@ -19,11 +19,11 @@
     label: "{{ prometheus_exporters_common_conf_dir }}/{{ item.file }}"
   when:
     - lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
-    - not prometheus_node_exporter_tls_self_signed
+    - not prometheus_node_exporter_tls_selfsigned
 
 - name: include tasks for self-signed TLS cert
-  include_tasks: tls_self_signed.yml
-  when: prometheus_node_exporter_tls_self_signed
+  include_tasks: tls_selfsigned.yml
+  when: prometheus_node_exporter_tls_selfsigned
 
 - name: Ensure client CA certificate is available
   copy:

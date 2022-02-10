@@ -40,22 +40,36 @@ prometheus_node_exporter_config_flags:
 #   .......................
 #   -----END CERTIFICATE-----
 
-# Alternatively, you can let the role generate a self-signed key pair.
+# Alternatively, you can let the role generate a self signed key pair.
 # Setting this to true will override 'prometheus_node_exporter_tls_cert'
 # and 'prometheus_node_exporter_tls_key'
-prometheus_node_exporter_tls_self_signed: false
+prometheus_node_exporter_tls_selfsigned: false
+
+# Optionally, you can provide your own CA to sign the certificate with
+# When you enable this, you need to provide a CA key and cert. Those
+# are expected to be PEM formatted X.509
+prometheus_node_exporter_tls_ownca_signed: false
+# prometheus_node_exporter_tls_ownca_content: |
+#   -----BEGIN CERTIFICATE-----
+#   MIIBvTCCAUSgAwIBAgIUHxAqS4UGCPM...........
+#   .......................
+#   -----END CERTIFICATE-----
+# prometheus_node_exporter_tls_ownca_privatekey_content: |
+#   -----BEGIN PRIVATE.....
+#   .................
+#   ....-END PRIVATE KEY-----
+
 
 # Various options to influence the key/csr parameters. See
 # https://docs.ansible.com/ansible/3/collections/community/crypto/openssl_privatekey_module.html
 # https://docs.ansible.com/ansible/3/collections/community/crypto/openssl_csr_pipe_module.html
 # for what their defaults are.
 
-# prometheus_node_exporter_tls_self_signed_key_size: 4096
-# prometheus_node_exporter_tls_self_signed_key_type: RSA
-# prometheus_node_exporter_tls_self_signed_key_curve: secp256r1
-# prometheus_node_exporter_tls_self_signed_key_regenerate: always
-# prometheus_node_exporter_tls_self_signed_csr_common_name: "{{ ansible_fqdn }} Prometheus Node Exporter"
-
+# prometheus_node_exporter_tls_selfsigned_key_size: 4096
+# prometheus_node_exporter_tls_selfsigned_key_type: RSA
+# prometheus_node_exporter_tls_selfsigned_key_curve: secp256r1
+# prometheus_node_exporter_tls_selfsigned_key_regenerate: always
+# prometheus_node_exporter_tls_selfsigned_csr_common_name: "{{ ansible_fqdn }} Prometheus Node Exporter"
 
 # Provide plain passwords - the role will take care of the correct hashing
 
