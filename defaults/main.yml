@@ -21,6 +21,8 @@ prometheus_node_exporter_config_flags:
 # Based on https://prometheus.io/docs/prometheus/latest/configuration/https/
 
 
+# TLS key materials
+
 # These values are expected to contain the actual content of the X.509 key
 # materials (in PEM format). Not file names.
 
@@ -38,6 +40,10 @@ prometheus_node_exporter_config_flags:
 #   .......................
 #   -----END CERTIFICATE-----
 
+# Alternatively, you can let the role generate a self-signed key pair.
+# Mutually exclusive with 'prometheus_node_exporter_tls_cert' and
+# 'prometheus_node_exporter_tls_key'.
+prometheus_node_exporter_tls_self_signed: false
 
 # Provide plain passwords - the role will take care of the correct hashing
 
