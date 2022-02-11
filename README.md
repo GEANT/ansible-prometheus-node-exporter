@@ -54,6 +54,7 @@ All needed packages will be installed with this role.
         'log.level': 'info'
 ```
 
+### TLS using an X.509 key pair that you provide, plus basic auth
 ```yaml
 - hosts: secure-node-exporters
   roles:
@@ -75,9 +76,50 @@ All needed packages will be installed with this role.
       prometheus_node_exporter_basic_auth_users:
         admin: hackme
         foo: bar
-      prometheus_node_exporter_http_server_config:
-        Strict-Transport-Security: max-age=600
 ```
+
+### TLS using an auto genereated self signed key pair, no authentication
+```yaml
+- hosts: secure-node-exporters
+  roles:
+    - role: undergreen.prometheus-node-exporter
+      prometheus_node_exporter_version: 1.3.1
+      prometheus_node_exporter_tls_selfsigned: true
+```
+
+
+### TLS using an auto generated key pair with custom options, signed with a CA that you own, plus basic auth
+```yaml
+- hosts: secure-node-exporters
+  roles:
+    - role: undergreen.prometheus-node-exporter
+      prometheus_node_exporter_version: 1.3.1
+      prometheus_node_exporter_tls_ownca: true
+      prometheus_node_exporter_tls_ownca_content: |
+        -----BEGIN CERTIFICATE-----
+        MIICMTCCAdegAwIBAgIUV7fDRGKIW37zkonNR6U/5ecD6pswCgYIKoZIzj0EAwQw
+        ZjELMAkGA1UEBhMCTkwxDzANBgNVBAoMBkfDiUFOVDEXMBUGA1UECwwOSy5XYXJr
+        dGFhcnRqZXMxLTArBgNVBAMMJEsuV2Fya3RhYXJ0amVzIENlcnRpZmljYXRlIEF1
+        dGhvcml0eTAeFw0yMjAyMTExNDU1MjdaFw0zODAxMTkwMzE0MDdaMGYxCzAJBgNV
+        BAYTAk5MMQ8wDQYDVQQKDAZHw4lBTlQxFzAVBgNVBAsMDksuV2Fya3RhYXJ0amVz
+        MS0wKwYDVQQDDCRLLldhcmt0YWFydGplcyBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkw
+        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQftoqmBvFN0vJRfa5M878vuUs4bBBh
+        54UCPJwhFdrrlXMZl79ZjDiT++tmIKdCbo8YVhKxc1lPTP+TyJQl2ZsSo2MwYTAv
+        BgNVHREEKDAmgiRLLldhcmt0YWFydGplcyBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkw
+        DwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUF1gsr+lXy6dWyUofZqeehTxtuEMw
+        CgYIKoZIzj0EAwQDSAAwRQIgOwqrnfEAE8UIgd7IonHlyDHYnkPxubLF/YEasCEU
+        K/MCIQDXCNpcgNzenDM5AWUg2giyss8r1h58kiO7SrEZ0pXR0A==
+        -----END CERTIFICATE-----
+      prometheus_node_exporter_tls_ownca_privatekey_content: "{{ lookup('file', '/opt/ca/very/secret.key') }}"
+      prometheus_node_exporter_tls_key_type: ECC
+      prometheus_node_exporter_tls_key_curve: secp256r1
+      prometheus_node_exporter_tls_cert_digest: sha512
+      prometheus_node_exporter_basic_auth_users:
+        admin: hackme
+        foo: bar
+```
+
+
 ## Note:
 
 Due to [prometheus/node_exporter#640](https://github.com/prometheus/node_exporter/pull/640) and [prometheus/node_exporter#639](https://github.com/prometheus/node_exporter/pull/639) changes, this role can only support the minimum version 0.15 of node_exporter.
