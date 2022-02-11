@@ -48,7 +48,7 @@ prometheus_node_exporter_tls_selfsigned: false
 # Optionally, you can provide your own CA to sign the certificate with
 # When you enable this, you need to provide a CA key and cert. Those
 # are expected to be PEM formatted X.509
-prometheus_node_exporter_tls_ownca_signed: false
+prometheus_node_exporter_tls_ownca: false
 # prometheus_node_exporter_tls_ownca_content: |
 #   -----BEGIN CERTIFICATE-----
 #   MIIBvTCCAUSgAwIBAgIUHxAqS4UGCPM...........

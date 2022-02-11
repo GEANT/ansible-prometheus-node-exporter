@@ -20,15 +20,27 @@
 - name: Ensure TLS certificate is available
   community.crypto.x509_certificate:
     path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
-    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
     csr_content: "{{ gencsr.csr }}"
-    # mode: "{{ item.mode }}"
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
-    provider: selfsigned
+    privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+    # The ones below vary based on selfsigned or ownca
+    provider: "{{ prometheus_node_exporter_tls_ownca | ternary('ownca', 'selfsigned') }}"
+    ownca_content: "{{ prometheus_node_exporter_tls_ownca_content | default(omit) }}"
+    ownca_privatekey_content: "{{ prometheus_node_exporter_tls_ownca_privatekey_content | default(omit) }}"
+
+# - name: Ensure TLS certificate is available
+#   community.crypto.x509_certificate:
+#     path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
+#     csr_content: "{{ gencsr.csr }}"
+#     owner: "{{ prometheus_exporters_common_user}}"
+#     group: "{{ prometheus_exporters_common_group }}"
+#     privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+#     provider: selfsigned
 
 # To ensure these are taken into account when constructing the web.yml file
 - name: set key variables
   set_fact:
+    # FIXME we can set dummy values - but what do we set?
     prometheus_node_exporter_tls_key: asdfas
     prometheus_node_exporter_tls_cert: asdfas

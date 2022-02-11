@@ -45,6 +45,7 @@
   when: prometheus_node_exporter_tls_cert is defined or
     prometheus_node_exporter_tls_key is defined or
     prometheus_node_exporter_tls_selfsigned or
+    prometheus_node_exporter_tls_ownca or
     prometheus_node_exporter_tls_client_ca is defined or
     prometheus_node_exporter_basic_auth_users is defined or
     prometheus_node_exporter_http_server_config is defined
