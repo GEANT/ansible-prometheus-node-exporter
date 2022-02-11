@@ -19,6 +19,10 @@ All needed packages will be installed with this role.
 | `prometheus_node_exporter_tls_cert` | string | See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 certificate  |
 | `prometheus_node_exporter_tls_key` | string |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 private key  |
 | `prometheus_node_exporter_tls_client_ca` | string |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 client CA |
+| `prometheus_node_exporter_tls_selfsigned` | boolean | | false | Create and use a self signed key pair for TLS |
+| `prometheus_node_exporter_tls_ownca` | boolean | | false | Create a key pair for TLS and sign the certificate with a CA |
+| `prometheus_node_exporter_tls_ownca_content` | string | | not defined | CA certificate, PEM formatted X.509 |
+| `prometheus_node_exporter_tls_ownca_privatekey_content` | string | | not defined | CA private key, PEM formatted X.509 |
 | `prometheus_node_exporter_basic_auth_users` | dict |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | `{}` | Key/value pairs representing usernames and (cleartext) passwords - the role takes care of hashing the passwords.  |
 | `prometheus_node_exporter_http_server_config` | dict |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | `{}` | Web server options  |
 
