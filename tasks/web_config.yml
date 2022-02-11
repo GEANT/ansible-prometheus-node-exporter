@@ -19,7 +19,7 @@
     label: "{{ prometheus_exporters_common_conf_dir }}/{{ item.file }}"
   when:
     - lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
-    - (not prometheus_node_exporter_tls_selfsigned or not prometheus_node_exporter_tls_ownca)
+    - "[prometheus_node_exporter_tls_selfsigned, prometheus_node_exporter_tls_ownca] is not any"
 
 - name: include tasks for self-signed and ownca TLS cert
   include_tasks: tls_create_keypair.yml

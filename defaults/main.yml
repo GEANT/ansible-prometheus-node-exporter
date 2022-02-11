@@ -40,15 +40,23 @@ prometheus_node_exporter_config_flags:
 #   .......................
 #   -----END CERTIFICATE-----
 
+
 # Alternatively, you can let the role generate a self signed key pair.
 # Setting this to true will override 'prometheus_node_exporter_tls_cert'
-# and 'prometheus_node_exporter_tls_key'
+# and 'prometheus_node_exporter_tls_key'. It is also mutally exclusive
+# with 'prometheus_node_exporter_tls_ownca' (see below)
 prometheus_node_exporter_tls_selfsigned: false
 
+
+# Yet another alternative is to let the role generate a key pair and
+# sign the certificate using a CA that you provide. Setting this to
+# true will override 'prometheus_node_exporter_tls_cert' and
+# 'prometheus_node_exporter_tls_key'. It is also mutally exclusive
+# with 'prometheus_node_exporter_tls_selsigned'.
+prometheus_node_exporter_tls_ownca: false
 # Optionally, you can provide your own CA to sign the certificate with
 # When you enable this, you need to provide a CA key and cert. Those
 # are expected to be PEM formatted X.509
-prometheus_node_exporter_tls_ownca: false
 # prometheus_node_exporter_tls_ownca_content: |
 #   -----BEGIN CERTIFICATE-----
 #   MIIBvTCCAUSgAwIBAgIUHxAqS4UGCPM...........
@@ -60,16 +68,18 @@ prometheus_node_exporter_tls_ownca: false
 #   ....-END PRIVATE KEY-----
 
 
-# Various options to influence the key/csr parameters. See
+# Various options to influence the key/csr/cert parameters. See
 # https://docs.ansible.com/ansible/3/collections/community/crypto/openssl_privatekey_module.html
 # https://docs.ansible.com/ansible/3/collections/community/crypto/openssl_csr_pipe_module.html
-# for what their defaults are.
+# for what their defaults are. Examples:
 
-# prometheus_node_exporter_tls_selfsigned_key_size: 4096
-# prometheus_node_exporter_tls_selfsigned_key_type: RSA
-# prometheus_node_exporter_tls_selfsigned_key_curve: secp256r1
-# prometheus_node_exporter_tls_selfsigned_key_regenerate: always
-# prometheus_node_exporter_tls_selfsigned_csr_common_name: "{{ ansible_fqdn }} Prometheus Node Exporter"
+# prometheus_node_exporter_tls_key_size: 4096
+# prometheus_node_exporter_tls_key_type: ECC
+# prometheus_node_exporter_tls_key_curve: secp256r1
+# prometheus_node_exporter_tls_key_regenerate: false
+# prometheus_node_exporter_tls_cert_digest: sha512
+# prometheus_node_exporter_tls_cert_regenerate: false
+# prometheus_node_exporter_tls_csr_common_name: "{{ ansible_fqdn }}"
 
 # Provide plain passwords - the role will take care of the correct hashing
 

@@ -2,10 +2,10 @@
 - name: Ensure TLS private key is available
   community.crypto.openssl_privatekey:
     path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
-    size: "{{ prometheus_node_exporter_tls_selfsigned_key_size | default(omit) }}"
-    type: "{{ prometheus_node_exporter_tls_selfsigned_key_type | default(omit) }}"
-    curve: "{{ prometheus_node_exporter_tls_selfsigned_key_curve | default(omit) }}"
-    regenerate: "{{ prometheus_node_exporter_tls_selfsigned_key_regenerate | default(omit) }}"
+    size: "{{ prometheus_node_exporter_tls_key_size | default(omit) }}"
+    type: "{{ prometheus_node_exporter_tls_key_type | default(omit) }}"
+    curve: "{{ prometheus_node_exporter_tls_key_curve | default(omit) }}"
+    force: "{{ prometheus_node_exporter_tls_key_regenerate | default(omit) }}"
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
 
@@ -13,7 +13,7 @@
   # We use the 'pipe' version because we don't want/need to write this to a file
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
-    common_name: "{{ prometheus_node_exporter_tls_selfsigned_csr_common_name | default(omit) }}"
+    common_name: "{{ prometheus_node_exporter_tls_csr_common_name | default(omit) }}"
   register: gencsr
   changed_when: false
 
@@ -24,23 +24,19 @@
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
     privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
+    force: "{{ prometheus_node_exporter_tls_cert_regenerate | default(omit) }}"
     # The ones below vary based on selfsigned or ownca
     provider: "{{ prometheus_node_exporter_tls_ownca | ternary('ownca', 'selfsigned') }}"
     ownca_content: "{{ prometheus_node_exporter_tls_ownca_content | default(omit) }}"
     ownca_privatekey_content: "{{ prometheus_node_exporter_tls_ownca_privatekey_content | default(omit) }}"
+    # These are only used by their respective provider - we can safely set them both 
+    ownca_digest: "{{ prometheus_node_exporter_tls_cert_digest | default(omit) }}"
+    selfsigned_digest: "{{ prometheus_node_exporter_tls_cert_digest | default(omit) }}"
 
-# - name: Ensure TLS certificate is available
-#   community.crypto.x509_certificate:
-#     path: "{{ prometheus_exporters_common_conf_dir }}/tls.crt"
-#     csr_content: "{{ gencsr.csr }}"
-#     owner: "{{ prometheus_exporters_common_user}}"
-#     group: "{{ prometheus_exporters_common_group }}"
-#     privatekey_path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
-#     provider: selfsigned
-
-# To ensure these are taken into account when constructing the web.yml file
+# Set these variables, to make sure they are added to the web.yml file.
+# The content at this stage is irrelevant, because we created that ourselves in
+# the previous tasks. So we can set a dummy value
 - name: set key variables
   set_fact:
-    # FIXME we can set dummy values - but what do we set?
-    prometheus_node_exporter_tls_key: asdfas
-    prometheus_node_exporter_tls_cert: asdfas
+    prometheus_node_exporter_tls_key: foo
+    prometheus_node_exporter_tls_cert: bar
