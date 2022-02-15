@@ -8,23 +8,23 @@ All needed packages will be installed with this role.
 
 ## Role Variables
 
-| Variable  | Type  | Choices |  Default  | Comment  |
-|-----------|-------|---------|-----------|----------|
-| `prometheus_node_exporter_version` | string | See [node_exporter](https://github.com/prometheus/node_exporter/releases) releases | 0.18.1    | Version of node_exporter that will be installed. Minimal supported version: 0.15    |
-| `prometheus_node_exporter_release_name`       | string |  | `node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64`   | Name of the binary that will be downloaded from the [release](https://github.com/prometheus/node_exporter/releases) page |
-| `prometheus_node_exporter_enabled_collectors` | list   | [List of flags](https://github.com/prometheus/node_exporter#disabled-by-default) | `[]`| List of [collectors that are disabled by default](https://github.com/prometheus/node_exporter#disabled-by-default) to enable   |
-| `prometheus_node_exporter_disabled_collectors` | list   | [List of flags](https://github.com/prometheus/node_exporter#enabled-by-default)| `[]`| List of [collectors that are enabled by default](https://github.com/prometheus/node_exporter#enabled-by-default) to disable  |
-| `prometheus_node_exporter_config_flags`  | dict   |   |  | Dict of key, value options to add to the start command line  |
-| `prometheus_node_exporter_url`    | string |      | not defined   | Custom URL to download node_exporter if you don't have access to GitHub     |
-| `prometheus_node_exporter_tls_cert` | string | See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 certificate  |
-| `prometheus_node_exporter_tls_key` | string |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 private key  |
-| `prometheus_node_exporter_tls_client_ca` | string |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | not defined | PEM formatted X.509 client CA |
-| `prometheus_node_exporter_tls_selfsigned` | boolean | | false | Create and use a self signed key pair for TLS |
-| `prometheus_node_exporter_tls_ownca` | boolean | | false | Create a key pair for TLS and sign the certificate with a CA |
-| `prometheus_node_exporter_tls_ownca_content` | string | | not defined | CA certificate, PEM formatted X.509 |
-| `prometheus_node_exporter_tls_ownca_privatekey_content` | string | | not defined | CA private key, PEM formatted X.509 |
-| `prometheus_node_exporter_basic_auth_users` | list of dicts |  | `[]` | List of dicts representing usernames and (cleartext) passwords - the role takes care of the password hashing.  |
-| `prometheus_node_exporter_http_server_config` | dict |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | `{}` | Web server options  |
+| Variable  | Type  |  Default  | Comment  |
+|-----------|-------|-----------|----------|
+| `prometheus_node_exporter_version` | string | 0.18.1    | Version of node_exporter that will be installed. Minimal supported version: 0.15. See [releases](https://github.com/prometheus/node_exporter/releases)    |
+| `prometheus_node_exporter_release_name`       | string | `node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64`   | Name of the binary that will be downloaded from the [release](https://github.com/prometheus/node_exporter/releases) page |
+| `prometheus_node_exporter_enabled_collectors` | list   | `[]`| List of [collectors that are disabled by default](https://github.com/prometheus/node_exporter#disabled-by-default) to enable   |
+| `prometheus_node_exporter_disabled_collectors` | list   | `[]`| List of [collectors that are enabled by default](https://github.com/prometheus/node_exporter#enabled-by-default) to disable  |
+| `prometheus_node_exporter_config_flags`  | dict   |   | Dict of key, value options to add to the start command line  |
+| `prometheus_node_exporter_url`    | string |   not defined   | Custom URL to download node_exporter if you don't have access to GitHub     |
+| `prometheus_node_exporter_tls_cert` | string | not defined | PEM formatted X.509 certificate. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/)  |
+| `prometheus_node_exporter_tls_key` | string |not defined | PEM formatted X.509 private key. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) |
+| `prometheus_node_exporter_tls_client_ca` | string | not defined | PEM formatted X.509 client CA. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) |
+| `prometheus_node_exporter_tls_selfsigned` | boolean | false | Create and use a self signed key pair for TLS |
+| `prometheus_node_exporter_tls_ownca` | boolean | false | Create a key pair for TLS and sign the certificate with a CA |
+| `prometheus_node_exporter_tls_ownca_content` | string | not defined | CA certificate, PEM formatted X.509 |
+| `prometheus_node_exporter_tls_ownca_privatekey_content` | string | not defined | CA private key, PEM formatted X.509 |
+| `prometheus_node_exporter_basic_auth_users` | list of dicts  | `[]` | List of dicts representing usernames and (cleartext) passwords - the role takes care of the password hashing.  |
+| `prometheus_node_exporter_http_server_config` | dict | `{}` | Web server options. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/)   |
 
 ## Dependencies
 
