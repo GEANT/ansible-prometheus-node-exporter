@@ -23,7 +23,7 @@ All needed packages will be installed with this role.
 | `prometheus_node_exporter_tls_ownca` | boolean | | false | Create a key pair for TLS and sign the certificate with a CA |
 | `prometheus_node_exporter_tls_ownca_content` | string | | not defined | CA certificate, PEM formatted X.509 |
 | `prometheus_node_exporter_tls_ownca_privatekey_content` | string | | not defined | CA private key, PEM formatted X.509 |
-| `prometheus_node_exporter_basic_auth_users` | dict |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | `{}` | Key/value pairs representing usernames and (cleartext) passwords - the role takes care of hashing the passwords.  |
+| `prometheus_node_exporter_basic_auth_users` | list of dicts |  | `[]` | List of dicts representing usernames and (cleartext) passwords - the role takes care of the password hashing.  |
 | `prometheus_node_exporter_http_server_config` | dict |See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) | `{}` | Web server options  |
 
 ## Dependencies
@@ -78,8 +78,10 @@ All needed packages will be installed with this role.
         -----END CERTIFICATE-----
       prometheus_node_exporter_tls_key: "{{ lookup('file','keys/proj/tls1.key') }}"
       prometheus_node_exporter_basic_auth_users:
-        admin: hackme
-        foo: bar
+        - username: admin
+          password: hackme
+        - username: foo
+          password: bar
 ```
 
 ### TLS using an auto genereated self signed key pair, no authentication
@@ -119,8 +121,10 @@ All needed packages will be installed with this role.
       prometheus_node_exporter_tls_key_curve: secp256r1
       prometheus_node_exporter_tls_cert_digest: sha512
       prometheus_node_exporter_basic_auth_users:
-        admin: hackme
-        foo: bar
+        - username: admin
+          password: hackme
+        - username: foo
+          password: bar
 ```
 
 

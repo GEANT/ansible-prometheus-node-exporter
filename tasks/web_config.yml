@@ -47,11 +47,13 @@
 
 # With idempotent password hashing, also on older/buggy ansible versions
 # See https://github.com/ansible/ansible/issues/36129
+# This also converts the configuration list to a dict, ready for use in the
+# template.
 - name: construct basic_auth_users
   set_fact:
     basic_auth_users: "{{ basic_auth_users | default({}) | combine(
       {
-        item.key: item.value |
+        item.username: item.password |
           password_hash(
             'bcrypt',
             ('abcdef0ghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' | shuffle(seed=inventory_hostname) | join)[:21] +
@@ -59,8 +61,7 @@
             rounds=9)
       }
     ) }}"
-  loop: "{{ prometheus_node_exporter_basic_auth_users|dict2items }}"
-  when: prometheus_node_exporter_basic_auth_users is defined
+  loop: "{{ prometheus_node_exporter_basic_auth_users }}"
   no_log: true
 
 - name: ensure web.config file is available
