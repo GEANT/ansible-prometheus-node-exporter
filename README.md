@@ -23,6 +23,10 @@ All needed packages will be installed with this role.
 | `prometheus_node_exporter_tls_ownca` | boolean | false | Create a key pair for TLS and sign the certificate with a CA |
 | `prometheus_node_exporter_tls_ownca_content` | string | not defined | CA certificate, PEM formatted X.509 |
 | `prometheus_node_exporter_tls_ownca_privatekey_content` | string | not defined | CA private key, PEM formatted X.509 |
+| `prometheus_node_exporter_tls_key_type` | string | not defined| Type of private key to generate. See the [openssl_privatekey docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/openssl_privatekey_module.html#parameter-type) |
+| `prometheus_node_exporter_tls_key_curve` | string | not defined | Curve to use. See the [openssl_privatekey docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/openssl_privatekey_module.html#parameter-curve) |
+| `prometheus_node_exporter_tls_key_size` | int | not defined | How many bits the generated key should be. Only applies to RSA keys. See the [openssl_private docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/openssl_privatekey_module.html#parameter-size)|
+| `prometheus_node_exporter_tls_key_digest` | string | not defined | Digest to use when signing the cert. See the [x509_certificate docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/x509_certificate_module.html#parameter-ownca_digest) |
 | `prometheus_node_exporter_basic_auth_users` | list of dicts  | `[]` | List of dicts representing usernames and (cleartext) passwords - the role takes care of the password hashing.  |
 | `prometheus_node_exporter_http_server_config` | dict | `{}` | Web server options. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/)   |
 
