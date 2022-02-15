@@ -62,7 +62,7 @@
       }
     ) }}"
   loop: "{{ prometheus_node_exporter_basic_auth_users }}"
-  no_log: true
+  # no_log: true
 
 - name: ensure web.config file is available
   template:

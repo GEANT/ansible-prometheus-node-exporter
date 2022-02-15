@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if basic_auth_users is defined %}
-{{ {'basic_auth_users': basic_auth_users | items2dict(key_name='username',value_name='password')} | to_nice_yaml }}
+{{ {'basic_auth_users': basic_auth_users} | to_nice_yaml }}
 {% endif %}
 
 {% if prometheus_node_exporter_http_server_config is defined %}
