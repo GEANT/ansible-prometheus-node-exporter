@@ -1,4 +1,9 @@
 ---
+- name: Ensure python3 cryptography package is available
+  apt:
+    name: python3-cryptography
+    state: present
+
 - name: Ensure TLS private key is available
   community.crypto.openssl_privatekey:
     path: "{{ prometheus_exporters_common_conf_dir }}/tls.key"
