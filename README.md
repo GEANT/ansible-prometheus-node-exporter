@@ -70,6 +70,8 @@ All needed packages will be installed with this role.
   roles:
     - role: undergreen.prometheus-node-exporter
       prometheus_node_exporter_version: 1.3.1
+      prometheus_node_exporter_tls_enable: true
+      prometheus_node_exporter_basic_auth_enable: true
       prometheus_node_exporter_tls_cert: |
         -----BEGIN CERTIFICATE-----
         MIIBgDCCASWgAwIBAgIUaa+4EIvsObFzij6Ntc6SFXKQoKkwCgYIKoZIzj0EAwIw
@@ -95,6 +97,7 @@ All needed packages will be installed with this role.
 - hosts: secure-node-exporters
   roles:
     - role: undergreen.prometheus-node-exporter
+      prometheus_node_exporter_tls_enable: true
       prometheus_node_exporter_version: 1.3.1
       prometheus_node_exporter_tls_selfsigned: true
 ```
@@ -106,6 +109,8 @@ All needed packages will be installed with this role.
   roles:
     - role: undergreen.prometheus-node-exporter
       prometheus_node_exporter_version: 1.3.1
+      prometheus_node_exporter_tls_enable: true
+      prometheus_node_exporter_basic_auth_enable: true
       prometheus_node_exporter_tls_ownca: true
       prometheus_node_exporter_tls_ownca_content: |
         -----BEGIN CERTIFICATE-----
