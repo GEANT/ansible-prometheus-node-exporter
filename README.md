@@ -16,6 +16,7 @@ All needed packages will be installed with this role.
 | `prometheus_node_exporter_disabled_collectors` | list   | `[]`| List of [collectors that are enabled by default](https://github.com/prometheus/node_exporter#enabled-by-default) to disable  |
 | `prometheus_node_exporter_config_flags`  | dict   |   | Dict of key, value options to add to the start command line  |
 | `prometheus_node_exporter_url`    | string |   not defined   | Custom URL to download node_exporter if you don't have access to GitHub     |
+| `prometheus_node_exporter_tls_enable` | boolean | false | Feature flag. When set to false no TLS related tasks will be configured  |
 | `prometheus_node_exporter_tls_cert` | string | not defined | PEM formatted X.509 certificate. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/)  |
 | `prometheus_node_exporter_tls_key` | string |not defined | PEM formatted X.509 private key. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) |
 | `prometheus_node_exporter_tls_client_ca` | string | not defined | PEM formatted X.509 client CA. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) |
@@ -27,8 +28,9 @@ All needed packages will be installed with this role.
 | `prometheus_node_exporter_tls_key_curve` | string | not defined | Curve to use. See the [openssl_privatekey docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/openssl_privatekey_module.html#parameter-curve) |
 | `prometheus_node_exporter_tls_key_size` | int | not defined | How many bits the generated key should be. Only applies to RSA keys. See the [openssl_private docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/openssl_privatekey_module.html#parameter-size)|
 | `prometheus_node_exporter_tls_key_digest` | string | not defined | Digest to use when signing the cert. See the [x509_certificate docs](https://docs.ansible.com/ansible/latest/collections/community/crypto/x509_certificate_module.html#parameter-ownca_digest) |
+| `prometheus_node_exporter_basic_auth_enable` | boolean | false | Feature flag. When set to false no basic auth will be configured |
 | `prometheus_node_exporter_basic_auth_users` | list of dicts  | `[]` | List of dicts representing usernames and (cleartext) passwords - the role takes care of the password hashing.  |
-| `prometheus_node_exporter_http_server_config` | dict | `{}` | Web server options. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/)   |
+| `prometheus_node_exporter_http_server_config` | dict | `{}` | Web server options. See [TLS and authentication](https://prometheus.io/docs/prometheus/latest/configuration/https/) TODO: add flag for this |
 
 ## Dependencies
 

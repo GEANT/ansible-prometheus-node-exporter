@@ -20,7 +20,8 @@ prometheus_node_exporter_config_flags:
 # parameters.
 # Based on https://prometheus.io/docs/prometheus/latest/configuration/https/
 
-# Enable TLS
+# Feature flag. If enabled, you need to enable/provide the configuration option
+# further below
 prometheus_node_exporter_tls_enable: false
 
 # TLS key materials
@@ -83,7 +84,8 @@ prometheus_node_exporter_tls_ownca: false
 # prometheus_node_exporter_tls_cert_regenerate: false
 # prometheus_node_exporter_tls_csr_common_name: "{{ ansible_fqdn }}"
 
-# Enable basic auth
+# Feature flag. If enabled, you need to enable/provide the configuration option
+# further below
 prometheus_node_exporter_basic_auth_enable: false
 
 # Provide plain passwords - the role will take care of the correct hashing
