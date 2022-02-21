@@ -18,12 +18,15 @@
   loop_control:
     label: "{{ prometheus_exporters_common_conf_dir }}/{{ item.file }}"
   when:
+    - prometheus_node_exporter_tls_enable
     - lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
     - "[prometheus_node_exporter_tls_selfsigned, prometheus_node_exporter_tls_ownca] is not any"
 
 - name: include tasks for self-signed and ownca TLS cert
   include_tasks: tls_create_keypair.yml
-  when: prometheus_node_exporter_tls_selfsigned or prometheus_node_exporter_tls_ownca
+  when:
+    - prometheus_node_exporter_tls_enable
+    - prometheus_node_exporter_tls_selfsigned or prometheus_node_exporter_tls_ownca
 
 - name: Ensure client CA certificate is available
   copy:
@@ -32,7 +35,9 @@
     mode: 0640
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
-  when: prometheus_node_exporter_tls_client_ca is defined
+  when:
+    - prometheus_node_exporter_tls_enable
+    - prometheus_node_exporter_tls_client_ca is defined
 
 - name: construct tls_server_config
   set_fact:
@@ -43,7 +48,9 @@
       }
     ) }}"
   loop: "{{ tls_files }}"
-  when: lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
+  when:
+    - prometheus_node_exporter_tls_enable
+    - lookup('varnames', 'prometheus_node_exporter_tls_' ~ item.name)
 
 # With idempotent password hashing, also on older/buggy ansible versions
 # See https://github.com/ansible/ansible/issues/36129
@@ -63,6 +70,7 @@
     ) }}"
   loop: "{{ prometheus_node_exporter_basic_auth_users }}"
   no_log: true
+  when: prometheus_node_exporter_basic_auth_enable
 
 - name: ensure web.config file is available
   template:
@@ -71,4 +79,3 @@
     mode: 0640
     owner: "{{ prometheus_exporters_common_user}}"
     group: "{{ prometheus_exporters_common_group }}"
-
