@@ -82,7 +82,7 @@ prometheus_node_exporter_tls_ownca: false
 # prometheus_node_exporter_tls_key_regenerate: false
 # prometheus_node_exporter_tls_cert_digest: sha512
 # prometheus_node_exporter_tls_cert_regenerate: false
-# prometheus_node_exporter_tls_csr_common_name: "{{ ansible_fqdn }}"
+# prometheus_node_exporter_tls_csr_common_name: "{{ ansible_facts['fqdn'] }}"
 
 # Feature flag. If enabled, you need to enable/provide the configuration option
 # further below
