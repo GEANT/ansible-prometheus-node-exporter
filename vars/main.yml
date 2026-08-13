@@ -19,3 +19,17 @@ tls_files:
   - name: client_ca
     file: client_ca.crt
     mode: "0640"
+
+prometheus_node_exporter_installed_version: >-
+  {{
+    (prometheus_node_exporter_current_version.stdout | default('')
+    | regex_search('version\s+([0-9]+\.[0-9]+\.[0-9]+)', '\1'))
+    | first
+    | default('', true)
+  }}
+prometheus_node_exporter_needs_install: >-
+  {{
+    (prometheus_node_exporter_current_version.rc is not defined) or
+    (prometheus_node_exporter_current_version.rc != 0) or
+    (prometheus_node_exporter_installed_version != prometheus_node_exporter_version)
+  }}

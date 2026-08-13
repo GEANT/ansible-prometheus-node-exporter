@@ -1,29 +1,44 @@
 ---
+- name: Check if node exporter binary exists
+  ansible.builtin.stat:
+    path: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}/node_exporter"
+  register: prometheus_node_exporter_binary
 
-- name: download prometheus node exporter binary locally
-  become: no
-  local_action:
-    module: get_url
+- name: Check installed node exporter version
+  ansible.builtin.command:
+    cmd: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}/node_exporter --version"
+  register: prometheus_node_exporter_current_version
+  changed_when: false
+  failed_when: false
+  when:
+    - prometheus_node_exporter_binary.stat.exists
+    - prometheus_node_exporter_binary.stat.executable
+
+- name: Download prometheus node exporter binary
+  ansible.builtin.get_url:
     url: "{{ url }}"
     dest: "/tmp/{{ prometheus_node_exporter_release_name }}.tar.gz"
+    mode: '0644'
+  when: prometheus_node_exporter_needs_install
 
-- name: transfer local node exporter binary
-  copy:
+- name: Unarchive binary tarball
+  ansible.builtin.unarchive:
     src: "/tmp/{{ prometheus_node_exporter_release_name }}.tar.gz"
-    dest: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}.tar.gz"
-    owner: "{{ prometheus_exporters_common_user}}"
-    group: "{{ prometheus_exporters_common_group }}"
-    mode: '0755'
-
-- name: unarchive binary tarball
-  unarchive:
-    copy: no
-    src: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}.tar.gz"
     dest: "{{ prometheus_exporters_common_dist_dir }}"
+    remote_src: true
     creates: "{{ prometheus_exporters_common_dist_dir }}/{{ prometheus_node_exporter_release_name }}/node_exporter"
+    owner: "{{ prometheus_exporters_common_user }}"
+    group: "{{ prometheus_exporters_common_group }}"
   register: prometheus_node_exporter_updated
   notify:
     - restart node exporter
+  when: prometheus_node_exporter_needs_install
+
+- name: Clean up downloaded tarball
+  ansible.builtin.file:
+    path: "/tmp/{{ prometheus_node_exporter_release_name }}.tar.gz"
+    state: absent
+  when: prometheus_node_exporter_needs_install
 
 - name: update group and owner for files
   file:
