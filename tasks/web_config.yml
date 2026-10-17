@@ -1,9 +1,9 @@
 ---
-- name: Ensure 'web.config' is added to the config flags
+- name: Ensure 'web.config.file' is added to the config flags
   ansible.builtin.set_fact:
     prometheus_node_exporter_config_flags: "{{ prometheus_node_exporter_config_flags | combine(
       {
-        'web.config': prometheus_exporters_common_conf_dir ~ '/web.yml'
+        'web.config.file': prometheus_exporters_common_conf_dir ~ '/web.yml'
       }
      ) }}"
 

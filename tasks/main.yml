@@ -45,6 +45,10 @@
     owner: root
     group: root
     mode: "0644"
+  notify: systemd_daemon_reload
+
+- name: Ensure systemd reloads immediately after changes
+  ansible.builtin.meta: flush_handlers
 
 - name: Ensure prometheus node exporter service is enabled and started
   ansible.builtin.service:
